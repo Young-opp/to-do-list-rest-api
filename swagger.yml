@@ -1,0 +1,126 @@
+openapi: 3.0.0
+info:
+  title: Todo API
+  description: A simple API for managing Todo tasks.
+  version: 1.0.0
+servers:
+  - url:  https://127.0.0.1:8000
+paths:
+  /tasks:
+    post:
+      summary: Create a new Todo task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoInput'
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          description: Validation error
+    get:
+      summary: Get all Todo tasks
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+  /tasks/{id}:
+    get:
+      summary: Get a single Todo task by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Task found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '404':
+          description: Task not found
+    put:
+      summary: Update a Todo task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoInput'
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          description: Validation error
+        '404':
+          description: Task not found
+    delete:
+      summary: Delete a Todo task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Task deleted successfully
+        '404':
+          description: Task not found
+
+components:
+  schemas:
+    Todo:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        is_completed:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    TodoInput:
+      type: object
+      required:
+        - title
+        - description
+        - is_completed
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        is_completed:
+          type: boolean
