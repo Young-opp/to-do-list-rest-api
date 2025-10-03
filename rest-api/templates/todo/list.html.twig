@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}All To-Dos{% endblock %}
+
+{% block body %}
+<h1 class="mb-4">My To-Do List</h1>
+
+<a href="{{ path('todo_new') }}" class="btn btn-success mb-3">➕ Add New To-Do</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for todo in todos %}
+            <tr>
+                <td>{{ todo.title }}</td>
+                <td>
+                    {% if todo.isCompleted %}
+                        <span class="badge bg-success">Completed</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('todo_show', {id: todo.id}) }}" class="btn btn-primary btn-sm">View</a>
+                    <a href="{{ path('todo_edit', {id: todo.id}) }}" class="btn btn-success btn-sm">Edit</a>
+
+                    <form action="{{ path('todo_delete', {id: todo.id}) }}" method="post" style="display:inline-block;" onsubmit="return confirm('Are you sure?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ todo.id) }}">
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">No tasks found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

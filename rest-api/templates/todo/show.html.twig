@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}View To-Do{% endblock %}
+
+{% block body %}
+<h1 class="mb-3">{{ todo.title }}</h1>
+
+<p><strong>Description:</strong> {{ todo.description }}</p>
+<p><strong>Status:</strong>
+    {% if todo.isCompleted %}
+        <span class="badge bg-success">Completed</span>
+    {% else %}
+        <span class="badge bg-warning text-dark">Pending</span>
+    {% endif %}
+</p>
+
+<a href="{{ path('todo_list') }}" class="btn btn-secondary">⬅ Back to List</a>
+<a href="{{ path('todo_edit', {id: todo.id}) }}" class="btn btn-success">Edit</a>
+
+<form action="{{ path('todo_delete', {id: todo.id}) }}" method="post" style="display:inline-block;" onsubmit="return confirm('Are you sure?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ todo.id) }}">
+    <button class="btn btn-danger">Delete</button>
+</form>
+{% endblock %}
